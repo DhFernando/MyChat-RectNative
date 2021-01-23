@@ -2,13 +2,18 @@ import React from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import { useDispatch } from 'react-redux'
+import { logOutUser } from '../../redux/index'
+
 export default function Header({ title }) {
 
-   
+  const dispatch = useDispatch();
+
+  const logout = () =>{ dispatch(logOutUser()) }
 
   return (
     <View style={styles.header}>
-      <MaterialIcons name='menu' size={28}  style={styles.icon} />
+      <MaterialIcons name='menu' size={28}  style={styles.icon} onPress={ ()=>logout() } />
       <View>
         <Text style={styles.headerText}>{title}</Text>
       </View>
