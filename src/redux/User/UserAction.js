@@ -53,3 +53,9 @@ export const loginUserBySystem = (uid) =>{
      
     }
 }
+
+export const createFriendReqest = (uid) =>{
+
+    // fb.firestore
+     
+}
