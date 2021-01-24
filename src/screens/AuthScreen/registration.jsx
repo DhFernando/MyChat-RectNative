@@ -1,6 +1,10 @@
 import React , {useEffect , useState} from 'react'
 import { View, Text , StyleSheet } from 'react-native'
 import { Container, Input, Item, Button, H1 } from 'native-base';
+import { useSelector , useDispatch } from 'react-redux'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {loginUserBySystem} from '../../redux/index'
 
 import {fb} from '../../../firebase'
 
@@ -10,6 +14,8 @@ const registor = ( {navigation} ) => {
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
     const [ repassword, setRepassword ] = useState('')
+
+    const dispatch = useDispatch();
 
     const createuser =  () =>{
         if(username.length != 0 && email.length != 0 && password.length != 0 && repassword === password ){
@@ -21,7 +27,10 @@ const registor = ( {navigation} ) => {
                         email: email,
                         uid:cred.user.uid
                     }) 
-                    navigation.pop()
+                    await AsyncStorage.setItem('authuser_uid', cred.user.uid)
+
+                    dispatch( loginUserBySystem( cred.user.uid ) )
+
                 }catch(e){
                     alert(e)
                 }
