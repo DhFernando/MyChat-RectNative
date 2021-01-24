@@ -20,7 +20,7 @@ export default function Home( {navigation} ) {
                     <Tab activeTabStyle={{ backgroundColor:"white" }} 
                         textStyle={{color:"white", fontFamily:"nunito-bold"}}  
                         activeTextStyle={{color:"green"}} heading="Friend List">
-                        <FriendList />
+                        <FriendList navigation={navigation} />
                     </Tab>
                     <Tab activeTabStyle={{ backgroundColor:"white" }} 
                         textStyle={{color:"white", fontFamily:"nunito-bold"}} 

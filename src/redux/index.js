@@ -1,5 +1,8 @@
 export {
     logOutUser,
     loginUser,
-    loginUserBySystem
+    loginUserBySystem,
+    createFriendReqest,
+    fetchFriendRequest,
+    acceptReqest
 } from './User/UserAction'

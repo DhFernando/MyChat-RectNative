@@ -59,8 +59,75 @@ export const loginUserBySystem = (uid) =>{
     }
 
 
-export const createFriendReqest = (uid) =>{
+export const createFriendReqest = (requester ,request_email ) =>{
+    return dispatch =>{
+       fb.firestore().collection("users").doc(request_email).get()
+        .then((doc)=>{
+            if(doc.id === request_email){
+                alert(`${doc.id} - ${ request_email }`)
+                fb.firestore().collection("users").doc(request_email).collection('requests')
+                .doc(requester.email)
+                .set({
+                    email: requester.email,
+                    username : requester.username,
+                    uid: requester.uid,
+                    accepted: false
+                })
+            }
+        }) 
 
-    // fb.firestore
-     
+        dispatch({ 
+            type: "CREATE_REQUEST",
+            payload: null
+        }) 
+    }
+    
+}
+
+export const fetchFriendRequest = (docid) =>{
+    return dispatch =>{ 
+        fb.firestore().collection("users").doc(docid).collection("requests")
+        .where("accepted", "==", false)
+        .onSnapshot(function(querySnapshot) {
+            var reqs = [];
+            querySnapshot.forEach(function(doc) {
+                reqs.push(doc.data());
+            });
+
+             dispatch({
+                type:"FETCH_FRIEND_REQUEST",
+                payload:reqs
+             });
+        })   
+    }
+}
+
+export const acceptReqest = (accepter , requester) =>{
+    return dispatch => {
+        alert(`${requester.email} - ${accepter.email}`)
+        fb.firestore().collection("users").doc( accepter.email ).collection( "requests" ).doc(requester.email)
+        .update({
+            accepted: true
+        }).then(()=>{
+            fb.firestore().collection( "users" ).doc( accepter.email ).collection( "friends" ).doc(requester.email)
+            .set({
+                username: requester.username,
+                uid : requester.uid,
+                email : requester.email
+            }).then(()=>{
+                fb.firestore().collection( "users" ).doc( requester.email ).collection( "friends" ).doc(accepter.email)
+                .set({
+                    username: accepter.username,
+                    uid : accepter.uid,
+                    email : accepter.email
+                }).then(()=>{
+                    alert("done process")
+                    dispatch({
+                        type:"ACCEPT_REQUEST",
+                        payload:null
+                     });
+                })
+            })
+        })
+    }
 }

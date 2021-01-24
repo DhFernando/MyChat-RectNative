@@ -1,17 +1,21 @@
 import React , { useState } from 'react'
+import { useDispatch , useSelector} from "react-redux"
+import {createFriendReqest} from '../../redux/index'
 
 import { View, Text ,StyleSheet } from 'react-native'
-
 import { Button, Icon, Item, Input, H1, H3 } from 'native-base'
 
 
 const Requests = () => {
 
     const [ email , setEmail ] = useState("")
+    const dispatch = useDispatch()
+    const userReducer = useSelector(state => state.user)
 
     const request = () =>{
         if(email.length != 0){
-            
+            dispatch(createFriendReqest(userReducer.authuser,  email))
+            setEmail("")
         }else{ alert("pleace insert mail") }
     }
 
@@ -20,7 +24,7 @@ const Requests = () => {
             
                 <Button style={{ flexDirection:"row" , justifyContent:"space-around" }} iconLeft block  light>
                     <Icon name='arrow-back' />
-                    <Text>Back</Text>
+                    <Text>Make Request</Text>
                     <Icon name='arrow-forward' />
                 </Button>
             <View style={styles.requests__header} >

@@ -2,7 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const initialState = {
     login: false,
-    authuser:{ uid:null, username:null , email:null }
+    authuser:{ uid:null, username:null , email:null },
+    friendrequests:[]
 }
 
 const testReducer = (state = initialState , action) => {
@@ -18,6 +19,11 @@ const testReducer = (state = initialState , action) => {
             login:false,
             authuser:{  ...state.authuser , uid:null ,username:null ,email:null }
             
+        }
+    }else if( action.type ==="FETCH_FRIEND_REQUEST" , action ){
+        return {
+            ...state,
+            friendrequests:action.payload
         }
     }else{ return state }
         
