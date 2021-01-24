@@ -4,12 +4,16 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { useDispatch } from 'react-redux'
 import { logOutUser } from '../../redux/index'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Header({ title }) {
 
   const dispatch = useDispatch();
 
-  const logout = () =>{ dispatch(logOutUser()) }
+  const logout = async () =>{
+    await AsyncStorage.removeItem('authuser_uid') 
+    dispatch(logOutUser())
+   }
 
   return (
     <View style={styles.header}>

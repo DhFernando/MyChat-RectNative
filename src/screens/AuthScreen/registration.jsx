@@ -16,9 +16,10 @@ const registor = ( {navigation} ) => {
              fb.auth().createUserWithEmailAndPassword(email,password)
             .then( async (cred)=>{
                 try{
-                    const res = await fb.firestore().collection('users').doc(cred.user.uid).set({
+                    const res = await fb.firestore().collection('users').doc(email).set({
                         username: username,
-                        email: email
+                        email: email,
+                        uid:cred.user.uid
                     }) 
                     navigation.pop()
                 }catch(e){

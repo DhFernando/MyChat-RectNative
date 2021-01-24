@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const logOutUser = (  ) => {
+    
     return {
         type: "LOGOUT_USER",
         payload: null
@@ -13,10 +14,12 @@ export const loginUser = (email , password) =>{
     return dispatch => { 
         fb.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-            const user = userCredential.user; 
-
-            fb.firestore().collection("users").doc(user.uid).get()
+            const user = userCredential.user;  
+            console.log( user.email)
+            console.log(typeof(email))
+            fb.firestore().collection("users").doc(email).get()
             .then( async (doc)=>{
+                console.log( doc.data()  )
                 const authuser = { email: doc.data().email , username: doc.data().username , id: user.uid  }
                 try{
                     await AsyncStorage.setItem('authuser_uid', user.uid)
@@ -39,20 +42,22 @@ export const loginUser = (email , password) =>{
 export const loginUserBySystem = (uid) =>{
 
     return dispatch => { 
-        fb.firestore().collection("users").doc(uid).get()
-        .then((doc)=>{
-            
-            const authuser = { email: doc.data().email , username: doc.data().username , id: uid  }
-            
+        fb.firestore().collection("users").where("uid","==",uid).get()
+        .then(function(querySnapshot) {
+            var authuser;
+            querySnapshot.forEach(function(doc) {
+                authuser = { email: doc.data().email , username: doc.data().username , id: uid  } 
+            });
             dispatch({ 
                 type: "LOGIN_USER",
                 payload: authuser
             }) 
-           
-        })
+        }) 
+    
+        }
      
     }
-}
+
 
 export const createFriendReqest = (uid) =>{
 

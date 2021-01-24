@@ -6,7 +6,7 @@ const initialState = {
 }
 
 const testReducer = (state = initialState , action) => {
-    if(action.type === "LOGIN_USER"){ 
+    if(action.type === "LOGIN_USER"){  
         return {
             ...state,
             login:true,
