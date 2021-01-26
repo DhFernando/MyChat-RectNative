@@ -14,8 +14,12 @@ const CreateRequest = () => {
 
     const request = () =>{
         if(email.length != 0){
-            dispatch(createFriendReqest(userReducer.authuser,  email))
-            setEmail("")
+            if( email != userReducer.authuser.email ){
+                dispatch(createFriendReqest(userReducer.authuser,  email))
+                setEmail("")
+            }else{
+                alert("you cannot send req to you...!")
+            }
         }else{ alert("pleace insert mail") }
     }
 

@@ -54,26 +54,20 @@ export const fetchActiveChats = (userid) =>{
         fb.firestore().collection("chat")  
         .orderBy("lastupdate")      
         .onSnapshot(function(querySnapshot) {
-            const chats = [];
-            // alert(typeof(chats))
+            const chats = []; 
             querySnapshot.forEach(function(doc) {
                if(doc.data().owners.owner01.uid === userid || doc.data().owners.owner02.uid === userid){
-                  
-                    
                     chats.push({
                         chatId:doc.id,
                         data: doc.data()
                     }); 
                }
             }); 
- dispatch({ 
-                        type: "FETCH_CHATS",
-                        payload: chats
-                    })
+            dispatch({ 
+                type: "FETCH_CHATS",
+                payload: chats
+            })
             
-
-           
-
         });
     }
 }
