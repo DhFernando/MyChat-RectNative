@@ -1,4 +1,8 @@
-import React , { useState } from 'react'
+import React , { useState , useEffect } from 'react'
+import { useSelector , useDispatch } from 'react-redux'
+import { fetchActiveChats } from '../../redux/index'
+
+
 import {StyleSheet, View,TouchableOpacity   } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons';
 import {  Card, CardItem, Text, Icon, Right, Button } from 'native-base';
@@ -8,41 +12,67 @@ import { FlatList } from 'react-native-gesture-handler'
 
 const ChatList = ({ navigation }) => {
 
-    const [ reviews , setReviews ] = useState([
-        {key:1, title:"IGI 1" , body:"i am going in" , rating: 5},
-        {key:2, title:"GTA vice city" , body:"first person game" , rating: 5},
-        {key:3, title:"loca cdjk" , body:"lorem ipsam" , rating: 5},
-     
-    ])
+    const dispatch = useDispatch();
+
+    const userReducer = useSelector(state=>state.user)
+    const messegeReducer = useSelector(state => state.messege )
+
+    const [ chats , setChats ] = useState([])
+
+    useEffect(()=>{
+        dispatch(fetchActiveChats(userReducer.authuser.uid))
+    }, [])
+
+    useEffect(()=>{
+        setChats(messegeReducer.chats)
+    },[ messegeReducer.chats ])
 
     
+    const navigate = ( to , chatId ) =>{
 
-    
-    const navigate = (_to , params) =>{
-       navigation.push(_to , params)
-    }
+        var friend__deatails = null
+        chats.forEach(el => {
+            if(el.chatId === chatId){
+                if(el.data.owners.owner01.uid === userReducer.authuser.uid ){
+                    friend__deatails = el.data.owners.owner02
+                    friend__deatails.chatId = chatId
+                }else{
+                    friend__deatails = el.data.owners.owner01
+                    friend__deatails.chatId = chatId
+                }
+            }
+        });
+
+        navigation.navigate(to , { friend__deatails }) 
+                
+    } 
     return (
             <View style={ styles.chat_container }>
 
-                <FlatList
-                    data={reviews}
-                    keyExtractor={(item)=>item.key.toString()}
-                    renderItem={(review)=>{
+                 <Text> {JSON.stringify(messegeReducer.chats[0].chatId)} </Text>
+
+                 <FlatList
+                    data={chats}
+                    keyExtractor={(item)=>item.chatId.toString()}
+                    renderItem={(chat)=>{
                         return( 
                             <View  >
-                                <TouchableOpacity onPress={()=>navigate("Chat", review.item ) }>
-                                    
-                                        <CardItem  style={ styles.chat_item }>
-                                            <MaterialIcons name='stars' size={28} style={styles.styles__icon} />
-                                            <View style={ styles.item }>
-                                                <Text  note numberOfLines={3}> {  review.item.title } - { review.item.key } </Text>
-                                            </View>
-                                            <Right>
-                                                <Icon name="arrow-forward" />
-                                            </Right>
-                                        </CardItem>
-                                    
-                                </TouchableOpacity>
+                                <CardItem  style={ styles.chat_item }>
+                                    <MaterialIcons name='face' size={45} style={ styles.styles__icon__face } />
+                                    <View style={ styles.item }>
+                                        <Text  note numberOfLines={3}> {  
+                                            chat.item.data.owners.owner01.uid === userReducer.authuser.uid ?
+                                            chat.item.data.owners.owner02.email : chat.item.data.owners.owner01.email  
+                                        } </Text>
+                                    </View>
+                                    <Right>
+                                        <View style={ styles.options_icons } >
+                                            <TouchableOpacity onPress={()=>navigate("Chat" , chat.item.chatId ) }>
+                                                <MaterialIcons name='chat' size={28} style={{...styles.styles__icon , color:"blue"  }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </Right>
+                                </CardItem>
                             </View>
                         )
                     }}

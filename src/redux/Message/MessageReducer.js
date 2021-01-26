@@ -1,6 +1,7 @@
 
 const initialState = {
-    messeges:[]
+    messeges:[],
+    chats:[]
 }
 
 const messageReducer = (state = initialState , action) => {
@@ -10,7 +11,13 @@ const messageReducer = (state = initialState , action) => {
             ...state,
             messeges : action.payload 
         }
-    }else{
+    }else if( action.type === "FETCH_CHATS" ){
+
+        return{
+            ...state,
+            chats :  action.payload
+        }
+    } else{
        return state  
     }
     

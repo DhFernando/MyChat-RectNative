@@ -9,6 +9,11 @@ export const sendMessege = (from , chatId ,messege) =>{
             from : from,
             reply: false,
             time : new Date()
+        }).then(()=>{
+            fb.firestore().collection("chat").doc(chatId)
+            .update({
+                lastupdate: new Date() 
+            })
         }).catch(function(error) {
             alert(error);
         });
@@ -42,3 +47,42 @@ export const fetchMesseges = (chatId) =>{
         });
     }
 }
+
+export const fetchActiveChats = (userid) =>{
+    return dispatch =>{
+ 
+        fb.firestore().collection("chat")  
+        .orderBy("lastupdate")      
+        .onSnapshot(function(querySnapshot) {
+            const chats = [];
+            // alert(typeof(chats))
+            querySnapshot.forEach(function(doc) {
+               if(doc.data().owners.owner01.uid === userid || doc.data().owners.owner02.uid === userid){
+                  
+                    
+                    chats.push({
+                        chatId:doc.id,
+                        data: doc.data()
+                    }); 
+               }
+            }); 
+ dispatch({ 
+                        type: "FETCH_CHATS",
+                        payload: chats
+                    })
+            
+
+           
+
+        });
+    }
+}
+
+
+
+
+
+
+
+
+
