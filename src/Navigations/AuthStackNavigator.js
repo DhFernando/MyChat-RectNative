@@ -27,10 +27,12 @@ import { createStackNavigator } from '@react-navigation/stack'
 
     const authcheck = async()=>{
         const uid = await AsyncStorage.getItem('authuser_uid')
-        if(uid != null){
-            dispatch(loginUserBySystem(uid))
+        if(uid != null){ 
+            dispatch(loginUserBySystem(uid)) 
         }else{
-            setUidAvailable(false)
+            setTimeout(function() {
+              setUidAvailable(false) 
+            }, 5000); 
         }
        
     }

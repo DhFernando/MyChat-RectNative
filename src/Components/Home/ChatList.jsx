@@ -16,6 +16,8 @@ const ChatList = ({ navigation }) => {
     ])
 
     
+
+    
     const navigate = (_to , params) =>{
        navigation.push(_to , params)
     }
