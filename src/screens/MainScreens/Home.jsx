@@ -25,7 +25,7 @@ export default function Home( {navigation} ) {
                     <Tab activeTabStyle={{ backgroundColor:"white" }} 
                         textStyle={{color:"white", fontFamily:"nunito-bold"}} 
                         activeTextStyle={{color:"green"}} heading="Requests">
-                        <Requests />
+                        <Requests  navigation={navigation} />
                     </Tab>
                 </Tabs>
             </Container>

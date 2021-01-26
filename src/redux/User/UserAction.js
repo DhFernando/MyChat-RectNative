@@ -85,12 +85,14 @@ export const createFriendReqest = (requester ,request_email ) =>{
 }
 
 export const fetchFriendRequest = (docid) =>{
+    
     return dispatch =>{ 
         fb.firestore().collection("users").doc(docid).collection("requests")
         .where("accepted", "==", false)
         .onSnapshot(function(querySnapshot) {
             var reqs = [];
             querySnapshot.forEach(function(doc) {
+                alert("fetchFriendRequest")
                 reqs.push(doc.data());
             });
 
@@ -104,30 +106,71 @@ export const fetchFriendRequest = (docid) =>{
 
 export const acceptReqest = (accepter , requester) =>{
     return dispatch => {
-        alert(`${requester.email} - ${accepter.email}`)
-        fb.firestore().collection("users").doc( accepter.email ).collection( "requests" ).doc(requester.email)
-        .update({
-            accepted: true
-        }).then(()=>{
-            fb.firestore().collection( "users" ).doc( accepter.email ).collection( "friends" ).doc(requester.email)
-            .set({
-                username: requester.username,
-                uid : requester.uid,
-                email : requester.email
-            }).then(()=>{
-                fb.firestore().collection( "users" ).doc( requester.email ).collection( "friends" ).doc(accepter.email)
-                .set({
-                    username: accepter.username,
+
+        fb.firestore().collection("chat").add({
+            chatType : "personal",
+            owners:{
+                owner01 : {
+                    email : requester.email,
+                    uid : requester.uid,
+                    username : requester.username
+                },
+                owner02:{
+                    email : accepter.email,
                     uid : accepter.uid,
-                    email : accepter.email
+                    username : accepter.username
+                }
+            },
+            lastupdate: new Date()
+        }).then(( docRef )=>{
+            fb.firestore().collection("users").doc( accepter.email ).collection( "requests" ).doc(requester.email)
+            .update({
+                accepted: true
+            }).then(()=>{
+                fb.firestore().collection( "users" ).doc( accepter.email ).collection( "friends" ).doc(requester.email)
+                .set({
+                    username: requester.username,
+                    uid : requester.uid,
+                    email : requester.email,
+                    chatId : docRef.id
                 }).then(()=>{
-                    alert("done process")
-                    dispatch({
-                        type:"ACCEPT_REQUEST",
-                        payload:null
-                     });
+                    fb.firestore().collection( "users" ).doc( requester.email ).collection( "friends" ).doc(accepter.email)
+                    .set({
+                        username: accepter.username,
+                        uid : accepter.uid,
+                        email : accepter.email,
+                        chatId : docRef.id
+                    }).then(()=>{
+                        alert("done process")
+                        dispatch({
+                            type:"ACCEPT_REQUEST",
+                            payload:null
+                        });
+                    })
                 })
             })
         })
+
+
+
+        
+    }
+}
+
+
+export const fetchFriends = (docid) =>{ 
+    return dispatch =>{ 
+        fb.firestore().collection("users").doc(docid).collection("friends")
+        .onSnapshot(function(querySnapshot) {
+            var reqs = [];
+            querySnapshot.forEach(function(doc) {
+                reqs.push(doc.data());
+            });
+
+             dispatch({
+                type:"FETCH_FRIENDS",
+                payload:reqs
+             });
+        })   
     }
 }

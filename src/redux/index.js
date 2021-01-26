@@ -4,5 +4,13 @@ export {
     loginUserBySystem,
     createFriendReqest,
     fetchFriendRequest,
-    acceptReqest
+    acceptReqest,
+    fetchFriends
 } from './User/UserAction'
+
+export {
+    sendMessege,
+    fetchMesseges
+}from './Message/MessageAction'
+
+

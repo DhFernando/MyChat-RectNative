@@ -1,43 +1,39 @@
-import React , { useState } from 'react'
-import { useDispatch , useSelector} from "react-redux"
-import {createFriendReqest} from '../../redux/index'
+import React, { useState } from 'react'
+
 
 import { View, Text ,StyleSheet } from 'react-native'
-import { Button, Icon, Item, Input, H1, H3 } from 'native-base'
+import { Button, Icon } from 'native-base'
 
+import CreateRequest from './Request/CreateRequest'
+ import RequestList from './Request/RequestList'
 
-const Requests = () => {
+const Requests = ( {navigation} ) => {
 
-    const [ email , setEmail ] = useState("")
-    const dispatch = useDispatch()
-    const userReducer = useSelector(state => state.user)
+    const [ display , setDisplay ] = useState("RequestList")
 
-    const request = () =>{
-        if(email.length != 0){
-            dispatch(createFriendReqest(userReducer.authuser,  email))
-            setEmail("")
-        }else{ alert("pleace insert mail") }
+    const changeDisplay = () =>{
+        if(display === "RequestList"){
+            setDisplay("CreateRequest")
+        }else if(display === "CreateRequest"){
+            setDisplay("RequestList")
+        }else return null
     }
 
     return (
         <View style={{flex:1}}>
             
-                <Button style={{ flexDirection:"row" , justifyContent:"space-around" }} iconLeft block  light>
-                    <Icon name='arrow-back' />
-                    <Text>Make Request</Text>
-                    <Icon name='arrow-forward' />
+                <Button style={{ ...styles.display__nav__btn }} iconLeft block  onPress={()=>{ changeDisplay() }} >
+                {display === "CreateRequest" ? 
+                        <Icon name='arrow-back'/> : <Icon name='arrow-back' style={ styles.arrow__nonvisible } />}
+    
+                    <Text  style={{ ...styles.display__nav__text }} > {display === "RequestList" ? "Goto Create Request" : "Goto Requests List"}</Text>
+    
+                {display === "CreateRequest" ?
+                    <Icon name='arrow-forward'  style={ styles.arrow__nonvisible }  /> : <Icon name='arrow-forward'/> }
                 </Button>
-            <View style={styles.requests__header} >
-                <H3 style={styles.requests__header__text}>Create Friend Request</H3>
-            </View>
-            <View style={styles.requests__container}>
-                <Item regular>
-                    <Input placeholder='Friend e-mail' onChangeText={(val)=>setEmail(val)} />
-                </Item>
-                <Button block style={styles.req_bnt} bordered info onPress={()=>request()} >
-                    <Text  style={styles.req_bnt__text}>Create Request</Text>
-                </Button>
-            </View>
+
+                {display === "CreateRequest" ? <CreateRequest navigation={navigation} /> : <RequestList navigation={navigation} />}
+            
         </View>
     )
 }
@@ -51,29 +47,24 @@ const styles = StyleSheet.create({
         alignItems:"center", 
         padding:30 
     },
-    requests__header:{
-        alignSelf:"center",
-        marginTop:"20%",
-        
+    display__nav__btn:{
+        backgroundColor:"#0288d1", 
+        flexDirection:"row" ,
+        justifyContent:"space-around" ,
     },
-    requests__header__text:{
-        color:"#01579b",
-        letterSpacing:2,
-        fontWeight:"bold",
-        borderWidth:1,
-        borderColor:"white",
-        borderBottomColor:"#e0e0e0",
-        paddingBottom:10,
-        paddingLeft:20,
-        paddingRight:20
-    },
-    req_bnt:{
-        marginTop:20
-    },
-    req_bnt__text:{
+    display__nav__text:{
+        color:"white",
         fontSize:15,
         fontWeight:"bold",
-        letterSpacing:5,
-        color:"#01579b"
-    }
+        letterSpacing:1
+    },
+   
+   arrow__nonvisible :{
+        color:"#0288d1"
+    },
+   
+    
+    
+    
+     
 })

@@ -1,6 +1,6 @@
 import React ,{ useEffect , useState} from 'react'
 import { useSelector , useDispatch } from 'react-redux'
-import { fetchFriendRequest } from '../../redux/index'
+import { fetchFriends } from '../../redux/index'
 
 import { View, Text , TouchableOpacity , StyleSheet} from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -12,42 +12,42 @@ const FriendList = ({ navigation }) => {
     const userReducer = useSelector(state=>state.user)
     const dispatch = useDispatch()
 
-    const [ requests , setRequests ]  = useState([])
+    const [ friends , setFriends ]  = useState([])
 
     useEffect(()=>{
-        setRequests(userReducer.friendrequests)
-    } , [ userReducer.friendrequests ])
+        setFriends(userReducer.friends)
+    } , [ userReducer.friends ])
 
     useEffect(()=>{
-        dispatch(fetchFriendRequest( userReducer.authuser.email ))
+        dispatch(fetchFriends( userReducer.authuser.email ))
     },[])
 
-    const navigate = ( to , request ) =>{
-        navigation.navigate(to , { request })
+    const navigate = ( to , friend__deatails ) =>{
+        navigation.navigate(to , { friend__deatails })
     }
 
     return (
         <View>
             <FlatList
-                    data={requests}
+                    data={friends}
                     keyExtractor={(item)=>item.uid.toString()}
-                    renderItem={(request)=>{
+                    renderItem={(friend)=>{
                         return( 
-                        <View  >
-                            <TouchableOpacity onPress={()=>navigate("RequestDeatails", request.item ) }>
-                                
-                                    <CardItem  style={ styles.chat_item }>
-                                        <MaterialIcons name='stars' size={28} style={styles.styles__icon} />
-                                        <View style={ styles.item }>
-                                            <Text  note numberOfLines={3}> {  request.item.email } </Text>
+                            <View  >
+                                <CardItem  style={ styles.chat_item }>
+                                    <MaterialIcons name='face' size={45} style={ styles.styles__icon__face } />
+                                    <View style={ styles.item }>
+                                        <Text  note numberOfLines={3}> {  friend.item.email } </Text>
+                                    </View>
+                                    <Right>
+                                        <View style={ styles.options_icons } >
+                                            <TouchableOpacity onPress={()=>navigate("Chat" , friend.item) }>
+                                                <MaterialIcons name='chat' size={28} style={{...styles.styles__icon , color:"blue"  }} />
+                                            </TouchableOpacity>
                                         </View>
-                                        <Right>
-                                            <Icon name="arrow-forward" />
-                                        </Right>
-                                    </CardItem>
-                                
-                            </TouchableOpacity>
-                        </View>
+                                    </Right>
+                                </CardItem>
+                            </View>
                         )
                     }}
                 />
@@ -73,5 +73,12 @@ const styles = StyleSheet.create({
     },
     chat_container:{
         marginTop:"3%"
+    },
+    options_icons:{
+        flexDirection:"row"
+    },
+    styles__icon__face:{
+        marginRight:"5%",
+        color:"#448aff"
     }
 })

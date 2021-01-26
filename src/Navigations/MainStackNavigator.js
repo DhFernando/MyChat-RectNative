@@ -28,7 +28,7 @@ import RequestDeatails from '../screens/MainScreens/RequestDeatails';
             headerStyle: {
               backgroundColor: '#3f51b5',
             },
-            headerTitle: props => <Header title="Chat Screen" />
+            headerTitle: props => <HeaderSub title="Chat Screen" />
           }}
           name={'Chat'} component={Chat} />
 
