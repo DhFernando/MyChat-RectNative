@@ -15,9 +15,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import RootStackNavigator from './src/Navigations/RootStackNavigation';
 
-import Header from './src/screens/SharedScreens/Header'
- 
-
  const App = () => {
 
   const StartStack =createStackNavigator();

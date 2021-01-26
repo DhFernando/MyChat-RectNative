@@ -24,20 +24,6 @@ const RootStackNavigator  =()=> {
         }
     },[userReducer.login])
 
-    useEffect(()=>{
-        authcheck()
-    },[])
-
-    const authcheck = async()=>{
-        const uid = await AsyncStorage.getItem('authuser_uid')
-        if(uid != null){
-            dispatch(loginUserBySystem(uid))
-        }
-       
-    }
-
-
-    
     return ( 
         <RootStack.Navigator screenOptions={{ headerShown:false }}>
             {
